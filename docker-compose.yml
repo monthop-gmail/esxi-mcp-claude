@@ -1,0 +1,19 @@
+services:
+  esxi-mcp:
+    build: .
+    container_name: esxi-mcp-claude
+    restart: unless-stopped
+    ports:
+      - "3100:3000"
+    environment:
+      - ESXI_HOST=${ESXI_HOST}
+      - ESXI_USERNAME=${ESXI_USERNAME:-root}
+      - ESXI_PASSWORD=${ESXI_PASSWORD}
+      - ESXI_INSECURE=${ESXI_INSECURE:-true}
+      - SSE_HOST=0.0.0.0
+      - SSE_PORT=3000
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
